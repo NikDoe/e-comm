@@ -1,6 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (request, response) => {
 	response.send(`
@@ -15,26 +18,7 @@ app.get('/', (request, response) => {
 	`);
 });
 
-const bodyParser = (request, response, next) => {
-	if (request.method === 'POST') {
-		request.on('data', data => {
-			const parsed = data.toString('utf8').split('&');
-
-			const formData = {};
-
-			for (const string of parsed) {
-				const [key, value] = string.split('=');
-				formData[key] = value;
-			}
-			request.body = formData;
-			next();
-		});
-	} else {
-		next();
-	}
-};
-
-app.post('/', bodyParser, (request, response) => {
+app.post('/', (request, response) => {
 	console.log(request.body);
 	response.send('Account created !😁');
 });
