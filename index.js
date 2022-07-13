@@ -16,6 +16,17 @@ app.get('/', (request, response) => {
 });
 
 app.post('/', (request, response) => {
+	request.on('data', data => {
+		const parsed = data.toString('utf8').split('&');
+
+		const formData = {};
+
+		for (const string of parsed) {
+			const [key, value] = string.split('=');
+			formData[key] = value;
+		}
+		console.log(formData);
+	});
 	response.send('Account created !😁');
 });
 
